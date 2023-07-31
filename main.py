@@ -9,7 +9,7 @@ class BudgetManager:
         self.budgets = {}
         self.current_budget = None
 
-
+    '''Creating budget'''
     def create_budget(self, name, amount):
         if name not in self.budgets :
             self.budgets[name] = {
@@ -20,14 +20,14 @@ class BudgetManager:
             self.current_budget = name
         else:
             print("Budget with this name already exists!")
-
+    '''Choosing a budget'''
     def select_budget(self, name):
         if name in self.budgets:
             self.current_budget = name
             print(f"Selected budget: '{name}'")
         else:
             print("Budget not found!")
-
+    '''Adding expenses'''
     def add_expense(self, amount, description) :
         if self.current_budget :
             self.budgets[self.current_budget]['amount'] -= amount
@@ -35,7 +35,7 @@ class BudgetManager:
             print(f"Expense of ${amount} for '{description}' added to '{self.current_budget}' budget.")
         else :
             print("Please select a budget first!")
-
+    '''Showing transactions'''
     def show_transactions(self):
         if self.current_budget:
             transactions = self.budgets[self.current_budget]['transactions']
@@ -44,7 +44,7 @@ class BudgetManager:
                 print(f"{idx}. Amount: ${amount}, Description: '{description}'")
         else:
             print("Please select a budget first!")
-
+    '''Showing budgets'''
     def show_budgets(self):
         print("Available budgets:")
         for budget, amount in self.budgets.items():
@@ -52,7 +52,7 @@ class BudgetManager:
 
     def get_budget_balance(self, name):
         return self.budgets.get(name, 0)
-
+    '''Creating a chart'''
     def generate_balance_chart(self):
         if not self.budgets:
             print("No budgets found. Please create a budget first.")
@@ -70,7 +70,7 @@ class BudgetManager:
         plt.ylabel('Balance')
         ax.grid(axis='y')
         plt.show()
-
+    '''Exporting to csv file'''
     def export_to_csv(self, filename) :
         if not self.budgets :
             print("No budgets found. Please create a budget first.")
@@ -83,7 +83,7 @@ class BudgetManager:
                 writer.writerow([budget, amount])
 
         print(f"Data exported to '{filename}' in CSV format.")
-
+    '''Exporting to pdf file'''
     def export_to_pdf(self, filename) :
         if not self.budgets :
             print("No budgets found. Please create a budget first.")
@@ -120,7 +120,7 @@ if __name__ == "__main__":
         print("10. Exit")
 
         choice = input("Enter your choice: ")
-
+        '''Choices of individual options'''
         if choice == "1":
             name = input("Enter the name of the budget: ")
             amount = float(input("Enter the initial amount: "))
