@@ -165,4 +165,4 @@ if __name__ == "__main__":
             print("Invalid choice. Please try again.")
 
 
-# Możliwość wpisania swojej wypłaty i odjęcie wydatków by uzyskać kwote jaka nam zostaje + suma wydatków.
+
