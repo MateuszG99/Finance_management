@@ -50,18 +50,25 @@ class BudgetManager:
         for budget, amount in self.budgets.items():
             print(f"'{budget}' - ${amount}")
 
-    def get_budget_balance(self, name):
-        return self.budgets.get(name, 0)
+    def get_budget_balance(self, name) :
+        budget_info = self.budgets.get(name)
+        if budget_info :
+            return budget_info['amount']
+        else :
+            print("Budget not found.")
+            return None
+
     '''Creating a chart'''
-    def generate_balance_chart(self):
-        if not self.budgets:
+
+    def generate_balance_chart(self, filename=None) :
+        if not self.budgets :
             print("No budgets found. Please create a budget first.")
             return
 
-        data = {'Budget': [], 'Balance': []}
-        for budget, info in self.budgets.items():
+        data = {'Budget' : [], 'Balance' : []}
+        for budget, info in self.budgets.items() :
             data['Budget'].append(budget)
-            data['Balance'].append(info['amount'])  # Dodajemy kwotę do wykresu
+            data['Balance'].append(info['amount'])
 
         df = pd.DataFrame(data)
         ax = df.plot(kind='bar', x='Budget', y='Balance', legend=False)
@@ -69,8 +76,15 @@ class BudgetManager:
         plt.xlabel('Budget')
         plt.ylabel('Balance')
         ax.grid(axis='y')
-        plt.show()
+
+        if filename :
+            plt.savefig(filename)
+            print(f"Chart saved as '{filename}'")
+        else :
+            plt.show()
+
     '''Exporting to csv file'''
+
     def export_to_csv(self, filename) :
         if not self.budgets :
             print("No budgets found. Please create a budget first.")
@@ -79,10 +93,11 @@ class BudgetManager:
         with open(filename, mode='w', newline='') as file :
             writer = csv.writer(file)
             writer.writerow(['Budget', 'Balance'])
-            for budget, amount in self.budgets.items() :
-                writer.writerow([budget, amount])
+            for budget, info in self.budgets.items() :
+                writer.writerow([budget, info['amount']])
 
         print(f"Data exported to '{filename}' in CSV format.")
+
     '''Exporting to pdf file'''
     def export_to_pdf(self, filename) :
         if not self.budgets :
