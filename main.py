@@ -27,14 +27,29 @@ class BudgetManager:
             print(f"Selected budget: '{name}'")
         else:
             print("Budget not found!")
-    '''Adding expenses'''
-    def add_expense(self, amount, description) :
-        if self.current_budget :
-            self.budgets[self.current_budget]['amount'] -= amount
-            self.budgets[self.current_budget]['transactions'].append((amount, description))
-            print(f"Expense of ${amount} for '{description}' added to '{self.current_budget}' budget.")
+
+    '''Editing budget'''
+    def edit_budget(self, name) :
+        if name in self.budgets :
+            print(f"Editing '{name}' budget:")
+            new_name = input("Enter the new name (leave empty to keep the current name): ")
+            new_amount = input("Enter the new initial amount (leave empty to keep the current amount): ")
+
+            if new_name :
+                self.budgets[new_name] = self.budgets.pop(name)
+                name = new_name
+
+            if new_amount :
+                try :
+                    new_amount = float(new_amount)
+                    self.budgets[name]['amount'] = new_amount
+                except ValueError :
+                    print("Invalid amount. The budget amount will not be changed.")
+
+            print(f"Budget '{name}' has been updated.")
         else :
-            print("Please select a budget first!")
+            print("Budget not found!")
+
     '''Showing transactions'''
     def show_transactions(self):
         if self.current_budget:
@@ -59,7 +74,6 @@ class BudgetManager:
             return None
 
     '''Creating a chart'''
-
     def generate_balance_chart(self, filename=None) :
         if not self.budgets :
             print("No budgets found. Please create a budget first.")
@@ -84,7 +98,6 @@ class BudgetManager:
             plt.show()
 
     '''Exporting to csv file'''
-
     def export_to_csv(self, filename) :
         if not self.budgets :
             print("No budgets found. Please create a budget first.")
@@ -119,20 +132,35 @@ class BudgetManager:
 
         print(f"Data exported to '{filename}' in PDF format.")
 
+    '''Deleting budget'''
+
+    def delete_budget(self, name) :
+        if name in self.budgets :
+            choice = input(f"Are you sure you want to delete '{name}' budget? (yes/no): ").lower()
+            if choice == "yes" :
+                del self.budgets[name]
+                print(f"Budget '{name}' has been deleted.")
+                self.current_budget = None
+            else :
+                print("Budget deletion canceled.")
+        else :
+            print("Budget not found!")
+
 if __name__ == "__main__":
     budget_manager = BudgetManager()
 
     while True:
         print("\n1. Create Budget")
-        print("2. Select Budget")
-        print("3. Add Expense")
-        print("4. Show Budgets")
-        print("5. Get Budget Balance")
-        print("6. Generate Balance Chart")
-        print("7. Export file to csv.")
-        print("8. Export file to pdf.")
-        print("9. Show transactions. ")
-        print("10. Exit")
+        print("2. Delete Budget")
+        print("3. Select Budget")
+        print("4. Edit Budget")
+        print("5. Show Budgets")
+        print("6. Get Budget Balance")
+        print("7. Generate Balance Chart")
+        print("8. Export file to csv")
+        print("9. Export file to pdf")
+        print("10. Show transactions ")
+        print("11. Exit")
 
         choice = input("Enter your choice: ")
         '''Choices of individual options'''
@@ -141,43 +169,44 @@ if __name__ == "__main__":
             amount = float(input("Enter the initial amount: "))
             budget_manager.create_budget(name, amount)
 
-        elif choice == "2":
+        elif choice == "2" :
+            name = input("Enter the name of the budget to delete: ")
+            budget_manager.delete_budget(name)
+
+        elif choice == "3":
             name = input("Enter the name of the budget to select: ")
             budget_manager.select_budget(name)
 
-        elif choice == "3":
-            amount = float(input("Enter the amount of the expense: "))
-            description = input("Enter a description of the expense: ")
-            budget_manager.add_expense(amount, description)
-
         elif choice == "4":
-            budget_manager.show_budgets()
+            name = input("Enter the name of the budget to edit: ")
+            budget_manager.edit_budget(name)
 
         elif choice == "5":
+            budget_manager.show_budgets()
+
+        elif choice == "6":
             name = input("Enter the name of the budget to get balance: ")
             balance = budget_manager.get_budget_balance(name)
             print(f"Balance of '{name}' budget: ${balance}")
 
-        elif choice == "6":
+        elif choice == "7":
             budget_manager.generate_balance_chart()
-
-        elif choice == "7" :
-            filename = input("Enter the filename to export (without extension): ")
-            budget_manager.export_to_csv(f"{filename}.csv")
 
         elif choice == "8" :
             filename = input("Enter the filename to export (without extension): ")
+            budget_manager.export_to_csv(f"{filename}.csv")
+
+        elif choice == "9" :
+            filename = input("Enter the filename to export (without extension): ")
             budget_manager.export_to_pdf(f"{filename}.pdf")
 
-        elif choice == "9":
+        elif choice == "10":
             budget_manager.show_transactions()
 
-        elif choice == "10":
+        elif choice == "11":
             print("Exiting the Budget Manager.")
             break
 
+
         else:
             print("Invalid choice. Please try again.")
-
-
-
