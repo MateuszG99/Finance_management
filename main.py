@@ -11,15 +11,32 @@ class BudgetManager:
 
     '''Creating budget'''
     def create_budget(self, name, amount):
-        if name not in self.budgets :
-            self.budgets[name] = {
-                'amount' : amount,
-                'transactions' : []
-            }
-            print(f"Budget '{name}' created with initial amount: ${amount}")
-            self.current_budget = name
-        else:
+        if not name:
+            print("Budget name cannot be empty.")
+            return
+
+        if name in self.budgets:
             print("Budget with this name already exists!")
+            return
+
+        try:
+            amount = float(amount)
+        except ValueError:
+            print("Invalid initial amount. Please enter a valid number.")
+            return
+
+        if amount <= 0:
+            print("Initial amount must be greater than zero.")
+            return
+
+        self.budgets[name] = {
+            'amount': amount,
+            'transactions': []
+        }
+        print(f"Budget '{name}' created with initial amount: ${amount}")
+        self.current_budget = name
+
+
     '''Choosing a budget'''
     def select_budget(self, name):
         if name in self.budgets:

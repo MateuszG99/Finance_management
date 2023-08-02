@@ -6,7 +6,7 @@ It gives you the ability to create budgets, edit budget, delete budget, update t
 In addition, it gives you the option to save our data as a pdf/csv file.
 
 To write this application I used:
--matplotlib
--panda
--csv
--reportlab
+matplotlib
+panda
+csv
+reportlab
