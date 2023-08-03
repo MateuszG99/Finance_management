@@ -46,20 +46,29 @@ class BudgetManager:
             print("Budget not found!")
 
     '''Editing budget'''
+
     def edit_budget(self, name) :
         if name in self.budgets :
             print(f"Editing '{name}' budget:")
             new_name = input("Enter the new name (leave empty to keep the current name): ")
             new_amount = input("Enter the new initial amount (leave empty to keep the current amount): ")
 
-            if new_name :
-                self.budgets[new_name] = self.budgets.pop(name)
-                name = new_name
+            # Validation of new budget name
+            if new_name and new_name != name :
+                if new_name in self.budgets :
+                    print("Budget with this name already exists. Please choose a different name.")
+                    return
+                else :
+                    self.budgets[new_name] = self.budgets.pop(name)
+                    name = new_name
+                    print(f"Budget name updated to '{name}'.")
 
+            # Validation of the new starting amount
             if new_amount :
                 try :
                     new_amount = float(new_amount)
                     self.budgets[name]['amount'] = new_amount
+                    print(f"Initial amount of '{name}' budget updated to ${new_amount}.")
                 except ValueError :
                     print("Invalid amount. The budget amount will not be changed.")
 
