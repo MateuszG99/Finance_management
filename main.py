@@ -46,7 +46,6 @@ class BudgetManager:
             print("Budget not found!")
 
     '''Editing budget'''
-
     def edit_budget(self, name) :
         if name in self.budgets :
             print(f"Editing '{name}' budget:")
@@ -159,17 +158,21 @@ class BudgetManager:
         print(f"Data exported to '{filename}' in PDF format.")
 
     '''Deleting budget'''
-
-    def delete_budget(self, name) :
-        if name in self.budgets :
+    def delete_budget(self, name):
+        if name in self.budgets:
             choice = input(f"Are you sure you want to delete '{name}' budget? (yes/no): ").lower()
-            if choice == "yes" :
+
+            while choice not in ['yes', 'no']:
+                print("Invalid choice. Please enter 'yes' or 'no'.")
+                choice = input(f"Are you sure you want to delete '{name}' budget? (yes/no): ").lower()
+
+            if choice == "yes":
                 del self.budgets[name]
                 print(f"Budget '{name}' has been deleted.")
                 self.current_budget = None
-            else :
+            else:
                 print("Budget deletion canceled.")
-        else :
+        else:
             print("Budget not found!")
 
 if __name__ == "__main__":
