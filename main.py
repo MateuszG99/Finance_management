@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import csv
+import os
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
@@ -123,23 +124,41 @@ class BudgetManager:
             plt.show()
 
     '''Exporting to csv file'''
-    def export_to_csv(self, filename) :
-        if not self.budgets :
+    def export_to_csv(self, filename):
+        if not self.budgets:
             print("No budgets found. Please create a budget first.")
             return
 
-        with open(filename, mode='w', newline='') as file :
+        if not filename or not filename.strip():
+            print("Invalid filename. Please enter a valid filename.")
+            return
+
+        if not filename.endswith(".csv"):
+            filename += ".csv"
+
+        with open(filename, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(['Budget', 'Balance'])
-            for budget, info in self.budgets.items() :
+            for budget, info in self.budgets.items():
                 writer.writerow([budget, info['amount']])
 
         print(f"Data exported to '{filename}' in CSV format.")
 
     '''Exporting to pdf file'''
-    def export_to_pdf(self, filename) :
-        if not self.budgets :
+    def export_to_pdf(self, filename):
+        if not self.budgets:
             print("No budgets found. Please create a budget first.")
+            return
+
+        if not filename or not filename.strip():
+            print("Invalid filename. Please enter a valid filename.")
+            return
+
+        if not filename.endswith(".pdf"):
+            filename += ".pdf"
+
+        if os.path.exists(filename):
+            print(f"File '{filename}' already exists. Please choose a different filename.")
             return
 
         c = canvas.Canvas(filename, pagesize=letter)
@@ -149,7 +168,7 @@ class BudgetManager:
         c.drawString(100, 730, "----------------")
 
         y = 700
-        for budget, amount in self.budgets.items() :
+        for budget, amount in self.budgets.items():
             c.drawString(100, y, f"{budget}: ${amount}")
             y -= 20
 
